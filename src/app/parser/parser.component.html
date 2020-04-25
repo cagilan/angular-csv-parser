@@ -1,0 +1,51 @@
+<!-- Start of mainContainer  -->
+<div class="container">
+  <h1 class="raboRecords">Issue-Count Records</h1>
+  <div class="row mt-5">
+      <!-- Uploading csv file -->
+      <div class="fileUpload col-md-4 col-xs-4 col-lg-4">
+          <label for="fileUploadCSV" class="fileUploadCSV">
+              <input type="file" name="files" class="form-control" #uploads (change)="onChange(uploads.files)"
+                  value="process" /></label>
+      </div>
+
+      <div class="filterSection col-md-4 col-xs-4 col-lg-4 offset-lg-4 offset-md-4" *ngIf="userInfoList.length>0">
+          <label for="filterByCount" class="filterByCount">
+              <input type="textbox" [(ngModel)]="selectedIssueCount" (ngModelChange)=filter()
+                  placeholder="Enter the count value" class="bgColor">
+          </label>
+      </div>
+
+  </div>
+  <!-- End of row -->
+
+  <!-- Tabular view for the uploaded csv file -->
+
+  <div class="raboRecordsBody mt-4">
+      <table class="userInfoTable">
+          <thead>
+              <tr>
+                  <th *ngFor="let item of headers;" (click)=sort(item)>{{item}}
+                      <i class="fa fa-chevron-down" [ngClass]="{active: item == currentActiveSortIndex}"></i>
+                  </th>
+              </tr>
+              <!-- userInfoToShow shows the record only for the filtered issue count -->
+
+          <tbody>
+              <!-- View based on filtered issue count -->
+              <tr *ngFor="let record of userInfoToShow">
+                  <td *ngFor="let item of headers">{{record[item]}}</td>
+              </tr>
+          </tbody>
+      </table>
+      <div *ngIf="userInfoToShow.length===0" class="no-data">
+          <p class="noRecords" colspan="4">NO RECORDS FOUND</p>
+      </div>
+  </div>
+</div>
+<!-- End of main container -->
+<!-- Spinner for indicating large file upload -->
+<ngx-spinner bdOpacity=0.9 bdColor="#333" size="medium" color="#fff" type="ball-clip-rotate">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>
+<!--End of Spinner for indicating large file upload -->
