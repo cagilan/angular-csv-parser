@@ -3,30 +3,28 @@ import { Papa } from 'ngx-papaparse';
 import { IssueCountFilterService } from '../services/issue-count-filter.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { MatTableDataSource } from '@angular/material/table';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { FileInput } from 'ngx-material-file-input';
-import {DomSanitizer} from '@angular/platform-browser';
-import {MatIconRegistry} from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatIconRegistry } from '@angular/material/icon';
 
 
 export interface PeriodicElement {
   name: string;
-  position: number;
+  position: string;
   weight: number;
   symbol: string;
+  //   // first_name: string;
+  //   // sur_name: string;
+  //   // issue_count: number;
+  //   // dob: string;
+
 }
 
 const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
+  { name: '1', position: 'chadran', weight: 1.0079, symbol: '1' },
+  { name: '2', position: 'agilan', weight: 4.0026, symbol: '1' },
+  { name: '3', position: 'agilan2', weight: 6.941, symbol: '1' },
 ];
 
 
@@ -54,9 +52,13 @@ export class ParserComponent implements OnInit {
   currentActiveSortIndex: string;
   showSpinner = false;
   form: FormGroup;
+  public files;
 
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  fileControl: FormControl;
+
+
+  // displayedColumns: string[] = ['name', 'position', 'weight', 'symbol'];
+  dataSource = new MatTableDataSource<any>();
 
   /**
    *
@@ -68,27 +70,25 @@ export class ParserComponent implements OnInit {
               private fb: FormBuilder,
               iconRegistry: MatIconRegistry,
               sanitizer: DomSanitizer) {
-      iconRegistry.addSvgIcon(
-        'open_in_browser',
-        sanitizer.bypassSecurityTrustResourceUrl('assets/open_in_browser-black-48dp.svg'));
-     }
+    iconRegistry.addSvgIcon(
+      'open_in_browser',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/open_in_browser-black-48dp.svg'));
+
+    this.fileControl = new FormControl(this.files);
+  }
   /**
    *
    * @param uploadEvent : File Object
    */
-  onChange(uploadEvent: any) {
-
-    if (uploadEvent[0]) {
-      this.showSpinner = true;
-      this.csvParse.parse(uploadEvent[0], {
-        header: true,
-        skipEmptyLines: true,
-        complete: (result, file) => {
-
-          this.generatingTableData(result);
-        }
-      });
-    }
+  parseCSV(file) {
+    this.showSpinner = true;
+    this.csvParse.parse(file._files[0], {
+      header: true,
+      skipEmptyLines: true,
+      complete: (result) => {
+        this.generatingTableData(result);
+      }
+    });
   }
 
   generatingTableData(result) {
@@ -98,6 +98,7 @@ export class ParserComponent implements OnInit {
     this.userInfoList = result.data;
     this.headers = Object.keys(result.data[0]);
     this.userInfoToShow = result.data;
+    this.dataSource = new MatTableDataSource(this.userInfoToShow);
     setTimeout(() => {
       /** spinner ends after 500 milli-seconds */
       this.showSpinner = false;
@@ -136,10 +137,22 @@ export class ParserComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.form = this.fb.group({
-      file: []
-  });
-}
+    this.fileControl.valueChanges.subscribe((files: any) => {
+      this.parseCSV(files);
+    });
+  }
 
-
+  sortData($event) {
+    const sortId = $event.active;
+    const sortDirection = $event.direction;
+    if ('asc' === sortDirection) {
+      this.dataSource.data = this.userInfoToShow.slice().sort(
+        (a, b) => a[sortId] > b[sortId] ? -1 : a[sortId] < b[sortId] ? 1 : 0
+      );
+    } else {
+      this.dataSource.data = this.userInfoToShow.slice().sort(
+        (a, b) => a[sortId] > b[sortId] ? -1 : a[sortId] < b[sortId] ? 1 : 0
+      );
+    }
+  }
 }
