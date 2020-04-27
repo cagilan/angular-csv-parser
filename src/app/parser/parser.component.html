@@ -19,8 +19,8 @@
 
     <div class="mat-elevation-z8">
       <mat-form-field appearance="fill">
-        <mat-label>Filter value...</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Inputs for filter...">
       </mat-form-field>
 
       <mat-table [dataSource]="dataSource" matSort>

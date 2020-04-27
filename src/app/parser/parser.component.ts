@@ -1,4 +1,3 @@
-import { FileInput } from 'ngx-material-file-input';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Papa } from 'ngx-papaparse';
 import { MatTableDataSource } from '@angular/material/table';
@@ -7,7 +6,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { IssueCountFilterService } from '../services/issue-count-filter.service';
 
 
 @Component({
@@ -18,12 +16,10 @@ import { IssueCountFilterService } from '../services/issue-count-filter.service'
 
 export class ParserComponent implements OnInit {
   userInfoToShow: any[] = [];
-  selectedIssueCount: any;
   headers: any[] = [];
   showSpinner = false;
   public files;
   fileControl: FormControl;
-  // displayedColumns: string[] = ['first', 'last', 'count', 'dob'];
   dataSource = new MatTableDataSource<any>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -32,10 +28,10 @@ export class ParserComponent implements OnInit {
   /**
    *
    * @param csvParse Object of PapaParser
-   * @param filterService Object of IssueCountFilterService
+   * @param iconRegistry Object of MatIconRegistry injectable service
+   * @param sanitizer DomSanitizer service
    */
   constructor(private csvParse: Papa,
-              private filterService: IssueCountFilterService,
               iconRegistry: MatIconRegistry,
               sanitizer: DomSanitizer) {
     iconRegistry.addSvgIcon(
@@ -44,12 +40,8 @@ export class ParserComponent implements OnInit {
 
     this.fileControl = new FormControl(this.files);
   }
-  /**
-   *
-   * @param file : File Object
-   */
-  parseCSV(file) {
-    this.files = file._files[0];
+
+  parseCSV() {
     this.showSpinner = true;
     this.csvParse.parse(this.files, {
       header: true,
@@ -67,6 +59,7 @@ export class ParserComponent implements OnInit {
     this.headers = Object.keys(result.data[0]);
     this.userInfoToShow = result.data;
     this.dataSource = new MatTableDataSource(this.userInfoToShow);
+
     setTimeout(() => {
       this.showSpinner = false;
       this.dataSource.sort = this.sort;
@@ -74,15 +67,15 @@ export class ParserComponent implements OnInit {
     }, 300);
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
+  applyFilter(filterValue) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   ngOnInit() {
     this.fileControl.valueChanges.subscribe((files: any) => {
       if (files) {
-        this.parseCSV(files);
+        this.files = files._files[0];
+        this.parseCSV();
       }
     });
   }

@@ -1,15 +1,18 @@
 
+$color-black8: #3f51b5;
+$color-orange: #fd9008;
+
 .container {
   padding: 20px;
 }
 
 .tracker-header {
   text-align: center;
-  color     : #fd9008;
+  color: $color-orange;
 }
 
 .report-header {
-  color     : #7d7b7b;
+  color: $color-black8;
 }
 
 .align-spinner-center {
