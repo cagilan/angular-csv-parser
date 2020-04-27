@@ -1,4 +1,3 @@
-import { FileInput } from 'ngx-material-file-input';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Papa } from 'ngx-papaparse';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,6 +7,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
+
 @Component({
   selector: 'app-parser',
   templateUrl: './parser.component.html',
@@ -15,13 +15,10 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 
 export class ParserComponent implements OnInit {
-  /**
-   *   userInfoToShow : Data to display
-   */
   userInfoToShow: any[] = [];
   headers: any[] = [];
   showSpinner = false;
-  files: FileInput;
+  public files;
   fileControl: FormControl;
   dataSource = new MatTableDataSource<any>();
 
@@ -31,7 +28,8 @@ export class ParserComponent implements OnInit {
   /**
    *
    * @param csvParse Object of PapaParser
-   * @param filterService Object of IssueCountFilterService
+   * @param iconRegistry Object of MatIconRegistry injectable service
+   * @param sanitizer DomSanitizer service
    */
   constructor(private csvParse: Papa,
               iconRegistry: MatIconRegistry,
@@ -42,13 +40,10 @@ export class ParserComponent implements OnInit {
 
     this.fileControl = new FormControl(this.files);
   }
-  /**
-   *
-   * @param file : File Object
-   */
-  parseCSV(file) {
+
+  parseCSV() {
     this.showSpinner = true;
-    this.csvParse.parse(file._files[0], {
+    this.csvParse.parse(this.files, {
       header: true,
       skipEmptyLines: true,
       complete: (result) => {
@@ -64,6 +59,7 @@ export class ParserComponent implements OnInit {
     this.headers = Object.keys(result.data[0]);
     this.userInfoToShow = result.data;
     this.dataSource = new MatTableDataSource(this.userInfoToShow);
+
     setTimeout(() => {
       this.showSpinner = false;
       this.dataSource.sort = this.sort;
@@ -71,14 +67,16 @@ export class ParserComponent implements OnInit {
     }, 300);
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
+  applyFilter(filterValue) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   ngOnInit() {
     this.fileControl.valueChanges.subscribe((files: any) => {
-      this.parseCSV(files);
+      if (files) {
+        this.files = files._files[0];
+        this.parseCSV();
+      }
     });
   }
 }
