@@ -7,6 +7,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import { IssueCountFilterService } from '../services/issue-count-filter.service';
+
 
 @Component({
   selector: 'app-parser',
@@ -15,14 +17,13 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 
 export class ParserComponent implements OnInit {
-  /**
-   *   userInfoToShow : Data to display
-   */
   userInfoToShow: any[] = [];
+  selectedIssueCount: any;
   headers: any[] = [];
   showSpinner = false;
-  files: FileInput;
+  public files;
   fileControl: FormControl;
+  // displayedColumns: string[] = ['first', 'last', 'count', 'dob'];
   dataSource = new MatTableDataSource<any>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -34,6 +35,7 @@ export class ParserComponent implements OnInit {
    * @param filterService Object of IssueCountFilterService
    */
   constructor(private csvParse: Papa,
+              private filterService: IssueCountFilterService,
               iconRegistry: MatIconRegistry,
               sanitizer: DomSanitizer) {
     iconRegistry.addSvgIcon(
@@ -47,8 +49,9 @@ export class ParserComponent implements OnInit {
    * @param file : File Object
    */
   parseCSV(file) {
+    this.files = file._files[0];
     this.showSpinner = true;
-    this.csvParse.parse(file._files[0], {
+    this.csvParse.parse(this.files, {
       header: true,
       skipEmptyLines: true,
       complete: (result) => {
@@ -78,7 +81,9 @@ export class ParserComponent implements OnInit {
 
   ngOnInit() {
     this.fileControl.valueChanges.subscribe((files: any) => {
-      this.parseCSV(files);
+      if (files) {
+        this.parseCSV(files);
+      }
     });
   }
 }
