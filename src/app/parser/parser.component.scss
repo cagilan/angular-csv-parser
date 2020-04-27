@@ -1,108 +1,11 @@
 
-.container-fluid {
-  // background-color: #f5f5f5;
-  // height          : 40rem;
-}
-
 .container {
   padding: 20px;
 }
 
-.raboRecords {
+.tracker-header {
   text-align: center;
   color     : #fd9008;
-  // padding   : 30px 0 0;
-}
-.warningMsg
-{
-  // color:red;
-  // font-weight:400;
-}
-
-.fileUpload {
-  // text-align: left;
-  // float     : left;
-
-  .fileUploadCSV,
-  .filterByCount {
-      // box-shadow: rgb(168, 168, 168);
-  }
-}
-
-.filterSection,
-.filterByCount {
-  // float: right;
-}
-
-.userInfoTable {
-  // border         : 2px solid #000;
-  // width          : 100%;
-  // text-align     : left;
-  // border-collapse: collapse;
-
-  tr:nth-child(2n) {
-      td {
-          // background-color: #CCC;
-      }
-  }
-
-  tr:hover {
-      td {
-          // background-color: #f5f5f5;
-      }
-  }
-
-  th {
-      i {
-          // color: #009;
-
-          &.active {
-              // color: #fff;
-          }
-      }
-  }
-}
-
-.userInfoTable thead {
-  // font : Arial, Helvetica, sans-serif;
-  // color: floralwhite;
-
-  // background: linear-gradient(#fd6400, #d6681f);
-}
-
-.userInfoTable td,
-th {
-  // border : 1px solid #000;
-  // padding: 4px 3px;
-}
-
-.noRecords {
-  text-align: center;
-  font-size : 14px;
-}
-
-button {
-  // color           : #009;
-  // background-color: white;
-}
-
-.bgColor {
-  // border       : 0px;
-  // border-bottom: 1px solid;
-
-  &:focus,
-  &:hover {
-      // outline: none;
-  }
-}
-
-.no-data {
-  padding   : 20px;
-  background: #EEE;
-
-  p {
-      // margin: 0;
-  }
 }
 
 .align-spinner-center {
@@ -114,12 +17,6 @@ button {
   width: 100%;
 }
 
-table {
-  width: 100%;
-}
-
 .file-browse-icon {
   cursor: pointer;
-  font-size: 36px;
-  // padding: 10px;
 }
