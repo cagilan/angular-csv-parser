@@ -1,0 +1,39 @@
+<div class="container">
+  <h1 class="tracker-header" tabindex="0">Fixed Issues - Report Tracker</h1>
+
+  <mat-card>
+    Choose File (XLS/XLSX/CSV)
+    <mat-form-field appearance="outline">
+      <ngx-mat-file-input [formControl]="fileControl" placeholder="CSV/Excel file only" [accept]="'.csv, .xls, .xlsx'">
+      </ngx-mat-file-input>
+      <mat-icon matSuffix svgIcon="open_in_browser" aria-hidden="false" aria-label="Example thumbs up SVG icon">
+      </mat-icon>
+    </mat-form-field>
+  </mat-card>
+  <br />
+
+  <mat-spinner *ngIf="showSpinner" class="align-spinner-center"></mat-spinner>
+
+  <mat-card *ngIf="userInfoToShow.length > 0">
+    <h1 class="report-header" tabindex="0">Report Name: {{files.name}}</h1>
+
+    <div class="mat-elevation-z8">
+      <mat-form-field appearance="fill">
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Inputs for filter...">
+      </mat-form-field>
+
+      <mat-table [dataSource]="dataSource" matSort>
+        <ng-container *ngFor="let col of headers" matColumnDef="{{col}}">
+          <mat-header-cell *matHeaderCellDef id="{{col}}" mat-sort-header>{{col}}</mat-header-cell>
+          <mat-cell *matCellDef="let element" tabindex="0">{{element[col]}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="headers"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: headers;"></mat-row>
+      </mat-table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 15]"></mat-paginator>
+    </div>
+  </mat-card>
+</div>
