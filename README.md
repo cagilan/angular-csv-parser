@@ -2,6 +2,10 @@
 
 Angular app that is capable of importing the attached csv-file and visualize it on the screen
 
+## Code base
+
+* Develop is merged to Master. Master is the final version.
+
 ## How to run this feature
 
 * npm run start
@@ -23,4 +27,16 @@ Angular app that is capable of importing the attached csv-file and visualize it 
 * Scss variable
 * Jasmine 
 * Accessibility
+
+## Parser constraints
+
+* Only allowed csv / xls / xlsx files
+
+## Demo screenshot 
+
+* Desktop / Mobile / Tab view 
+
+## TO DO
+
+* Add test for invalid or empty file 
 
