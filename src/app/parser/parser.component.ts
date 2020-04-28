@@ -21,6 +21,7 @@ export class ParserComponent implements OnInit {
   public files;
   fileControl: FormControl;
   dataSource = new MatTableDataSource<any>();
+  isValidFile = true;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -43,6 +44,7 @@ export class ParserComponent implements OnInit {
 
   parseCSV() {
     this.showSpinner = true;
+    this.isValidFile = true;
     this.csvParse.parse(this.files, {
       header: true,
       skipEmptyLines: true,
@@ -73,9 +75,12 @@ export class ParserComponent implements OnInit {
 
   ngOnInit() {
     this.fileControl.valueChanges.subscribe((files: any) => {
-      if (files) {
+      if (files._files[0].size > 0) {
         this.files = files._files[0];
         this.parseCSV();
+      } else {
+        this.isValidFile = false;
+        this.userInfoToShow = [];
       }
     });
   }

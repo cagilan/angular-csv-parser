@@ -9,6 +9,7 @@
       <mat-icon matSuffix svgIcon="open_in_browser" aria-hidden="false" aria-label="Example thumbs up SVG icon">
       </mat-icon>
     </mat-form-field>
+    <div class="error-message" *ngIf="!isValidFile" tabindex="0">Please choose valid file</div>
   </mat-card>
   <br />
 

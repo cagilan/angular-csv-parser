@@ -2,10 +2,6 @@
 
 Angular app that is capable of importing the attached csv-file and visualize it on the screen
 
-## Code base
-
-* Develop is merged to Master. Master is the final version.
-
 ## How to run this feature
 
 * npm run start
